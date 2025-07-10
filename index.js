@@ -1,17 +1,30 @@
 const express = require('express');
-const app = express();
 const cors = require('cors');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+require('dotenv').config();
 
+//database connection
+const connectMoongoseDb = require('./config/db');
+connectMoongoseDb()
+const app = express();
 
 //middlewares
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
+
+//routes
 app.get('/',(req,res) =>{
-    res.send('Hello World');
+    res.send('Hello World!');
 })
 
-app.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
+
+//listening to the server
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Server is running on ${process.env.BASE_URL}:${port}`);
 }
 );
