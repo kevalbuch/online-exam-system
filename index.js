@@ -4,6 +4,9 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
+const user = require('./routes/user')
+const student = require('./routes/student')
+
 //database connection
 const connectMoongoseDb = require('./config/db');
 connectMoongoseDb()
@@ -17,10 +20,8 @@ app.use(cookieParser());
 
 
 //routes
-app.get('/',(req,res) =>{
-    res.send('Hello World!');
-})
-
+app.use('/user',user)
+// app.use('/student',student)
 
 //listening to the server
 const port = process.env.PORT || 3000;
