@@ -116,7 +116,7 @@ router.post(
       }
 
       // console.log(userData);
-      console.log(process.env.JWT_SECRET)
+      // console.log(process.env.JWT_SECRET)
 
       const payload = {
         user: {
