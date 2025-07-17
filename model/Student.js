@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
-const studentSchema  = new moongoose.Schema({
+const studentSchema  = new mongoose.Schema({
     profileInfo:{
-        type: moongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'users'
     },
     attemptedTests:{
