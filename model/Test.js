@@ -39,7 +39,7 @@ const testSchema = new moongose.Schema({
         // default: []
     },
     attempted:{
-        type: boolean,
+        type: Boolean,
         default: false
     },
     answers: {
