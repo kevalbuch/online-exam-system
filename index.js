@@ -6,6 +6,7 @@ require('dotenv').config();
 
 const user = require('./routes/user')
 const student = require('./routes/student')
+const teacher = require('./routes/teacher')
 
 //database connection
 const connectMoongoseDb = require('./config/db');
@@ -22,6 +23,7 @@ app.use(cookieParser());
 //routes
 app.use('/user',user)
 app.use('/student',student)
+app.use('/teacher',teacher)
 
 //listening to the server
 const port = process.env.PORT || 3000;
