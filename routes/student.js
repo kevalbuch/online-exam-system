@@ -61,29 +61,46 @@ router.get("/profile/:profileID", auth, async (req, res) => {
  * @description - Fetch all the tests that student class assigned
  */
 
+// router.get("/tests/:studentClass", auth, async (req, res) => {
+//   const studentClass = req.params.studentClass;
+
+//   try {
+//     await Test.find(
+//       {
+//         className: studentClass,
+//       },
+//       "-assignedTo -submitBy -teacherId -__v"
+//     ).exec(function (err, obj) {
+//       if (err) {
+//         return res.status(400).json({ err });
+//       } else {
+//         return res.status(200).json({
+//           obj,
+//         });
+//       }
+//     });
+//   } catch (err) {
+//     console.log(err.message);
+//     res.status(500).send("Error in fetching Test Data");
+//   }
+// });
+
 router.get("/tests/:studentClass", auth, async (req, res) => {
   const studentClass = req.params.studentClass;
 
   try {
-    await Test.find(
-      {
-        className: studentClass,
-      },
+    const obj = await Test.find(
+      { className: studentClass },
       "-assignedTo -submitBy -teacherId -__v"
-    ).exec(function (err, obj) {
-      if (err) {
-        return res.status(400).json({ err });
-      } else {
-        return res.status(200).json({
-          obj,
-        });
-      }
-    });
+    );
+
+    return res.status(200).json( obj );
   } catch (err) {
     console.log(err.message);
     res.status(500).send("Error in fetching Test Data");
   }
 });
+
 
 /**
  * @method - GET
@@ -91,26 +108,40 @@ router.get("/tests/:studentClass", auth, async (req, res) => {
  * @description - Fetch all attempted tests of student
  */
 
+// router.get("/attempt-tests/:studentID", auth, async (req, res) => {
+//   const studentID = req.params.studentID;
+
+//   try {
+//     await Student.find({
+//       _id: studentID,
+//     }).exec(function (err, obj) {
+//       if (err) {
+//         return res.status(400).json({ err });
+//       } else {
+//         return res.status(200).json({
+//           obj,
+//         });
+//       }
+//     });
+//   } catch (err) {
+//     console.log(err.message);
+//     res.status(500).send(err);
+//   }
+// });
+
 router.get("/attempt-tests/:studentID", auth, async (req, res) => {
   const studentID = req.params.studentID;
 
   try {
-    await Student.find({
-      _id: studentID,
-    }).exec(function (err, obj) {
-      if (err) {
-        return res.status(400).json({ err });
-      } else {
-        return res.status(200).json({
-          obj,
-        });
-      }
-    });
+    const obj = await Student.find({ _id: studentID });
+
+    return res.status(200).json({ obj });
   } catch (err) {
     console.log(err.message);
     res.status(500).send(err);
   }
 });
+
 
 /**
  * @method - POST
@@ -118,35 +149,62 @@ router.get("/attempt-tests/:studentID", auth, async (req, res) => {
  * @description - Fetch student results using studentID
  */
 
+// router.post("/results/:studentID", auth, async (req, res) => {
+//   const studentID = req.params.studentID;
+//   const { testID } = req.body;
+
+//   try {
+//     await Test.find(
+//       {
+//         _id: testID,
+//       },
+//       "submitBy -_id",
+//       function (err, obj) {
+//         if (err) {
+//           return res.status(400).json({ err });
+//         } else {
+//           const result = obj[0].submitBy.filter((student, index) => {
+//             return student.id === studentID;
+//           });
+
+//           return res.status(200).json({
+//             result,
+//           });
+//         }
+//       }
+//     );
+//   } catch (err) {
+//     console.log(err.message);
+//     res.status(500).send("Error in fetching Test Data");
+//   }
+// });
+
 router.post("/results/:studentID", auth, async (req, res) => {
   const studentID = req.params.studentID;
   const { testID } = req.body;
 
   try {
-    await Test.find(
-      {
-        _id: testID,
-      },
-      "submitBy -_id",
-      function (err, obj) {
-        if (err) {
-          return res.status(400).json({ err });
-        } else {
-          const result = obj[0].submitBy.filter((student, index) => {
-            return student.id === studentID;
-          });
-
-          return res.status(200).json({
-            result,
-          });
-        }
-      }
+    const obj = await Test.find(
+      { _id: testID },
+      "submitBy -_id"
     );
+
+    if (!obj || obj.length === 0) {
+      return res.status(404).json({ message: "Test not found" });
+    }
+
+    const result = obj[0].submitBy.filter((student) => student.id === studentID);
+
+    return res.status(200).json({
+      result,
+    });
+
   } catch (err) {
     console.log(err.message);
     res.status(500).send("Error in fetching Test Data");
   }
 });
+
 
 /**
  * @method - PUT
